@@ -22,6 +22,7 @@ input{width:100%;padding:16px 16px 16px 41px;border-radius:15px;border:1px solid
 .presets{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:10px 0 18px}
 .preset{border:1px solid rgba(255,255,255,.14);background:#111c34;color:#fff;border-radius:11px;padding:10px 4px;font-weight:900;cursor:pointer}
 .pay{width:100%;border:0;border-radius:15px;padding:17px;background:#0877ff;color:#fff;font-size:18px;font-weight:900;cursor:pointer}
+.pay:disabled,.walletBtn:disabled{opacity:.55;cursor:not-allowed}
 .note,.status{text-align:center;font-size:13px;color:#92a4c2;line-height:1.45}
 .status{min-height:18px;margin-top:10px;color:#a7d6ff}
 .sep{height:1px;background:rgba(255,255,255,.1);margin:20px 0}
@@ -29,32 +30,35 @@ input{width:100%;padding:16px 16px 16px 41px;border-radius:15px;border:1px solid
 .copy{width:100%;margin-top:9px;border:1px solid rgba(255,255,255,.14);background:#111c34;color:#fff;border-radius:11px;padding:11px;font-weight:800;cursor:pointer}
 .modal{position:fixed;inset:0;background:rgba(0,0,0,.72);display:none;align-items:center;justify-content:center;padding:18px;z-index:50}
 .modal.show{display:flex}
-.sheet{width:min(440px,100%);max-height:92vh;overflow:auto;background:#0b1428;border:1px solid rgba(255,255,255,.14);border-radius:24px;padding:22px;box-shadow:0 25px 80px rgba(0,0,0,.55)}
+.sheet{width:min(440px,100%);background:#0b1428;border:1px solid rgba(255,255,255,.14);border-radius:24px;padding:22px;box-shadow:0 25px 80px rgba(0,0,0,.55)}
 .sheet h2{margin:0 0 8px;text-align:center;font-size:24px}
 .sheet p{margin:0 0 16px;text-align:center;color:#aebbd1;line-height:1.4}
-.walletBtn{display:block;width:100%;text-decoration:none;text-align:center;border:1px solid rgba(255,255,255,.14);background:#13203d;color:white;border-radius:14px;padding:14px;margin:9px 0;font-weight:900;cursor:pointer}
+.walletBtn{display:block;width:100%;text-align:center;border:1px solid rgba(255,255,255,.14);background:#13203d;color:white;border-radius:14px;padding:14px;margin:9px 0;font-weight:900;cursor:pointer}
 .walletBtn.primary{background:#0877ff;border-color:#0877ff}
-.qrwrap{background:white;border-radius:18px;padding:14px;width:max-content;max-width:100%;margin:16px auto}
-#qrcode img,#qrcode canvas{display:block;max-width:240px;width:100%!important;height:auto!important}
-.small{font-size:12px;color:#8698b8;text-align:center;line-height:1.4}
 .close{width:100%;border:0;background:transparent;color:#a9b7ce;padding:12px;cursor:pointer;font-weight:800}
-.paymentUri{font-family:monospace;font-size:11px;word-break:break-all;background:#050b16;color:#aebbd1;border-radius:10px;padding:10px;margin-top:12px;display:none}
 </style>
 </head>
+
 <body>
 <main class="card">
 <div class="logo">$1</div>
 <h1>$1 to a Million</h1>
+
 <p class="sub">Help me reach $1,000,000. Send any amount you want.</p>
 
 <label>Choose stablecoin</label>
+
 <div class="tokens">
 <button class="token active" data-token="USDT">USDT</button>
 <button class="token" data-token="USDC">USDC</button>
 </div>
 
 <label>Amount</label>
-<div class="amount"><span>$</span><input id="amount" type="number" min="0.01" step="0.01" value="1" inputmode="decimal"></div>
+
+<div class="amount">
+<span>$</span>
+<input id="amount" type="number" min="0.01" step="0.01" value="1" inputmode="decimal">
+</div>
 
 <div class="presets">
 <button class="preset" data-v="1">$1</button>
@@ -63,170 +67,321 @@ input{width:100%;padding:16px 16px 16px 41px;border-radius:15px;border:1px solid
 <button class="preset" data-v="100">$100</button>
 </div>
 
-<button class="pay" id="pay">Continue to payment</button>
-<p class="note">Solana network. Choose USDT or USDC.</p>
+<button class="pay" id="pay">Connect wallet and pay</button>
+
+<p class="note">Solana network. A wallet confirmation is always required.</p>
+
 <div class="status" id="status"></div>
 
 <div class="sep"></div>
+
 <div class="address">DfNh2TzQKjScai966UMtxQcUDV2F3NG6SxNKxnWkmMvm</div>
+
 <button class="copy" id="copy">Copy wallet address</button>
 </main>
 
 <div class="modal" id="modal">
-  <div class="sheet">
-    <h2>Choose how to pay</h2>
-    <p id="summary"></p>
+<div class="sheet">
 
-    <a class="walletBtn primary" id="phantomBtn" href="#">Open in Phantom</a>
-    <a class="walletBtn" id="solflareBtn" href="#">Open in Solflare</a>
-    <button class="walletBtn" id="directBtn">Open payment link</button>
+<h2>Choose your wallet</h2>
 
-    <div class="qrwrap"><div id="qrcode"></div></div>
-    <div class="small">
-      On a computer: scan this code with a Solana wallet on your phone.<br>
-      On a phone: use Phantom or Solflare above.
-    </div>
+<p id="summary"></p>
 
-    <div class="paymentUri" id="paymentUri"></div>
-    <button class="walletBtn" id="copyPay">Copy payment request</button>
-    <button class="close" id="close">Close</button>
-  </div>
+<button class="walletBtn primary" id="phantomBtn">Phantom</button>
+
+<button class="walletBtn" id="solflareBtn">Solflare</button>
+
+<button class="close" id="close">Close</button>
+
+</div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
-<script>
-const recipient = "DfNh2TzQKjScai966UMtxQcUDV2F3NG6SxNKxnWkmMvm";
+<script type="module">
+import {
+  Connection,
+  PublicKey,
+  Transaction
+} from "https://esm.sh/@solana/web3.js@1.98.4?bundle";
+
+import {
+  getAssociatedTokenAddress,
+  createAssociatedTokenAccountInstruction,
+  createTransferCheckedInstruction
+} from "https://esm.sh/@solana/spl-token@0.4.14?bundle&deps=@solana/web3.js@1.98.4";
+
+const recipient = new PublicKey(
+  "DfNh2TzQKjScai966UMtxQcUDV2F3NG6SxNKxnWkmMvm"
+);
+
 const tokens = {
-  USDT: "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
-  USDC: "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+  USDT: {
+    mint: new PublicKey(
+      "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB"
+    ),
+    decimals: 6
+  },
+  USDC: {
+    mint: new PublicKey(
+      "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+    ),
+    decimals: 6
+  }
 };
 
+const connection = new Connection(
+  "https://api.mainnet-beta.solana.com",
+  "confirmed"
+);
+
 let selected = "USDT";
+let busy = false;
+
 const amount = document.getElementById("amount");
 const status = document.getElementById("status");
 const modal = document.getElementById("modal");
 const summary = document.getElementById("summary");
-const qrcode = document.getElementById("qrcode");
-const paymentUriBox = document.getElementById("paymentUri");
-let currentPaymentUri = "";
 
-function cleanAmount(v) {
-  const n = Number(v);
-  if (!Number.isFinite(n) || n <= 0) return null;
-  return n.toString();
+function cleanAmount(value) {
+  const text = String(value).trim();
+
+  if (!/^\d+(\.\d{1,6})?$/.test(text) || Number(text) <= 0) {
+    return null;
+  }
+
+  return text;
 }
 
-function buildPaymentUri() {
-  const a = cleanAmount(amount.value);
-  if (!a) return null;
-  return "solana:" + recipient +
-    "?amount=" + encodeURIComponent(a) +
-    "&spl-token=" + encodeURIComponent(tokens[selected]) +
-    "&label=" + encodeURIComponent("$1 to a Million") +
-    "&message=" + encodeURIComponent("Support the $1 to a Million challenge");
+function baseUnits(value, decimals) {
+  const [whole, fraction = ""] = value.split(".");
+
+  return (
+    BigInt(whole) * 10n ** BigInt(decimals) +
+    BigInt((fraction + "0".repeat(decimals)).slice(0, decimals))
+  );
 }
 
-function pageUrlForWallet() {
-  const u = new URL(window.location.href);
-  u.searchParams.set("walletPay", "1");
-  u.searchParams.set("token", selected);
-  u.searchParams.set("amount", cleanAmount(amount.value) || "1");
-  return u.toString();
+function providerFor(wallet) {
+  if (wallet === "phantom") {
+    return (
+      window.phantom?.solana ||
+      (window.solana?.isPhantom ? window.solana : null)
+    );
+  }
+
+  return window.solflare || null;
 }
 
-function openModal() {
-  currentPaymentUri = buildPaymentUri();
-  if (!currentPaymentUri) {
+function walletPage(wallet) {
+  const page = encodeURIComponent(
+    location.href.split("?")[0] + "?wallet=" + wallet
+  );
+
+  const reference = encodeURIComponent(
+    location.origin + location.pathname
+  );
+
+  if (wallet === "phantom") {
+    return (
+      "https://phantom.app/ul/browse/" +
+      page +
+      "?ref=" +
+      reference
+    );
+  }
+
+  return (
+    "https://solflare.com/ul/v1/browse/" +
+    page +
+    "?ref=" +
+    reference
+  );
+}
+
+async function payWith(wallet) {
+  const value = cleanAmount(amount.value);
+
+  if (!value) {
+    status.textContent = "Enter a valid amount.";
+    modal.classList.remove("show");
+    return;
+  }
+
+  const provider = providerFor(wallet);
+
+  if (!provider) {
+    location.href = walletPage(wallet);
+    return;
+  }
+
+  if (busy) {
+    return;
+  }
+
+  busy = true;
+
+  document
+    .querySelectorAll(".walletBtn")
+    .forEach(button => button.disabled = true);
+
+  status.textContent = "Waiting for wallet confirmation...";
+
+  try {
+    const connected = await provider.connect();
+
+    const sender = new PublicKey(
+      connected.publicKey || provider.publicKey
+    );
+
+    const { mint, decimals } = tokens[selected];
+
+    const senderToken = await getAssociatedTokenAddress(
+      mint,
+      sender
+    );
+
+    const receiverToken = await getAssociatedTokenAddress(
+      mint,
+      recipient
+    );
+
+    const transaction = new Transaction();
+
+    const receiverAccount =
+      await connection.getAccountInfo(receiverToken);
+
+    if (!receiverAccount) {
+      transaction.add(
+        createAssociatedTokenAccountInstruction(
+          sender,
+          receiverToken,
+          recipient,
+          mint
+        )
+      );
+    }
+
+    transaction.add(
+      createTransferCheckedInstruction(
+        senderToken,
+        mint,
+        receiverToken,
+        sender,
+        baseUnits(value, decimals),
+        decimals
+      )
+    );
+
+    transaction.feePayer = sender;
+
+    transaction.recentBlockhash =
+      (await connection.getLatestBlockhash()).blockhash;
+
+    const result =
+      await provider.signAndSendTransaction(transaction);
+
+    const signature =
+      typeof result === "string"
+        ? result
+        : result.signature;
+
+    modal.classList.remove("show");
+
+    status.innerHTML =
+      'Payment sent. <a style="color:#70b7ff" target="_blank" rel="noopener" href="https://solscan.io/tx/' +
+      signature +
+      '">View transaction</a>';
+
+  } catch (error) {
+    status.textContent =
+      error?.message || "Payment was cancelled or failed.";
+
+    modal.classList.remove("show");
+
+  } finally {
+    busy = false;
+
+    document
+      .querySelectorAll(".walletBtn")
+      .forEach(button => button.disabled = false);
+  }
+}
+
+document
+  .querySelectorAll(".token")
+  .forEach(button => {
+    button.onclick = () => {
+      document
+        .querySelectorAll(".token")
+        .forEach(item => item.classList.remove("active"));
+
+      button.classList.add("active");
+      selected = button.dataset.token;
+    };
+  });
+
+document
+  .querySelectorAll(".preset")
+  .forEach(button => {
+    button.onclick = () => {
+      amount.value = button.dataset.v;
+    };
+  });
+
+document.getElementById("pay").onclick = () => {
+  const value = cleanAmount(amount.value);
+
+  if (!value) {
     status.textContent = "Enter a valid amount.";
     return;
   }
 
-  const a = cleanAmount(amount.value);
-  summary.textContent = "$" + a + " " + selected + " on Solana";
-
-  qrcode.innerHTML = "";
-  new QRCode(qrcode, {
-    text: currentPaymentUri,
-    width: 240,
-    height: 240,
-    correctLevel: QRCode.CorrectLevel.M
-  });
-
-  paymentUriBox.textContent = currentPaymentUri;
-
-  const targetPage = pageUrlForWallet();
-  const encPage = encodeURIComponent(targetPage);
-  const ref = encodeURIComponent(window.location.origin + window.location.pathname);
-
-  document.getElementById("phantomBtn").href =
-    "https://phantom.app/ul/browse/" + encPage + "?ref=" + ref;
-
-  document.getElementById("solflareBtn").href =
-    "https://solflare.com/ul/v1/browse/" + encPage + "?ref=" + ref;
+  summary.textContent =
+    "$" + value + " " + selected + " on Solana";
 
   modal.classList.add("show");
-}
-
-document.querySelectorAll(".token").forEach(btn => {
-  btn.onclick = () => {
-    document.querySelectorAll(".token").forEach(x => x.classList.remove("active"));
-    btn.classList.add("active");
-    selected = btn.dataset.token;
-  };
-});
-
-document.querySelectorAll(".preset").forEach(btn => {
-  btn.onclick = () => amount.value = btn.dataset.v;
-});
-
-document.getElementById("pay").onclick = openModal;
-
-document.getElementById("directBtn").onclick = () => {
-  if (!currentPaymentUri) currentPaymentUri = buildPaymentUri();
-  if (currentPaymentUri) window.location.href = currentPaymentUri;
 };
 
-document.getElementById("close").onclick = () => modal.classList.remove("show");
-modal.onclick = (e) => {
-  if (e.target === modal) modal.classList.remove("show");
+document.getElementById("phantomBtn").onclick = () => {
+  payWith("phantom");
+};
+
+document.getElementById("solflareBtn").onclick = () => {
+  payWith("solflare");
+};
+
+document.getElementById("close").onclick = () => {
+  modal.classList.remove("show");
+};
+
+modal.onclick = event => {
+  if (event.target === modal) {
+    modal.classList.remove("show");
+  }
 };
 
 document.getElementById("copy").onclick = async () => {
   try {
-    await navigator.clipboard.writeText(recipient);
+    await navigator.clipboard.writeText(
+      recipient.toString()
+    );
+
     status.textContent = "Wallet address copied.";
+
   } catch {
-    status.textContent = recipient;
+    status.textContent = recipient.toString();
   }
 };
 
-document.getElementById("copyPay").onclick = async () => {
-  try {
-    await navigator.clipboard.writeText(currentPaymentUri);
-    document.getElementById("copyPay").textContent = "Copied";
-    setTimeout(() => document.getElementById("copyPay").textContent = "Copy payment request", 1500);
-  } catch {
-    paymentUriBox.style.display = "block";
-  }
-};
+const requestedWallet =
+  new URLSearchParams(location.search).get("wallet");
 
-(function autoPayInsideWallet() {
-  const params = new URLSearchParams(window.location.search);
-  if (params.get("walletPay") !== "1") return;
-
-  const t = params.get("token");
-  const a = params.get("amount");
-  if (tokens[t]) {
-    selected = t;
-    document.querySelectorAll(".token").forEach(x => x.classList.toggle("active", x.dataset.token === t));
-  }
-  if (a && Number(a) > 0) amount.value = a;
-
-  setTimeout(() => {
-    const uri = buildPaymentUri();
-    if (uri) window.location.href = uri;
-  }, 700);
-})();
+if (
+  requestedWallet === "phantom" ||
+  requestedWallet === "solflare"
+) {
+  status.textContent =
+    "Wallet detected. Choose amount and continue.";
+}
 </script>
 </body>
 </html>
