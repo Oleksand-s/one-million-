@@ -5,46 +5,181 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#07101f">
 <title>$1 to a Million</title>
+
 <style>
 *{box-sizing:border-box}
-body{margin:0;min-height:100vh;display:grid;place-items:center;padding:22px;background:radial-gradient(circle at top,#18345f 0,#081225 45%,#03070e 100%);color:#fff;font-family:Arial,Helvetica,sans-serif}
-.card{width:min(500px,100%);background:rgba(7,16,31,.97);border:1px solid rgba(255,255,255,.1);border-radius:28px;padding:26px;box-shadow:0 24px 70px rgba(0,0,0,.45)}
-.logo{width:82px;height:82px;margin:0 auto 16px;border-radius:50%;display:grid;place-items:center;background:#0877ff;font-size:34px;font-weight:900;box-shadow:0 0 28px rgba(8,119,255,.4)}
-h1{text-align:center;margin:0;font-size:32px}
-.sub{text-align:center;color:#b8c5dc;line-height:1.45;margin:10px 0 24px}
-label{display:block;font-weight:800;margin:16px 0 8px}
-.tokens{display:grid;grid-template-columns:repeat(2,1fr);gap:9px}
-.token{border:1px solid rgba(255,255,255,.15);background:#111c34;color:#fff;border-radius:13px;padding:13px 6px;font-size:16px;font-weight:900;cursor:pointer}
-.token.active{outline:2px solid #2d94ff;background:#16294c}
-.amount{position:relative}
-.amount span{position:absolute;left:16px;top:50%;transform:translateY(-50%);font-size:26px;font-weight:900}
-input{width:100%;padding:16px 16px 16px 41px;border-radius:15px;border:1px solid rgba(255,255,255,.14);background:#0d1730;color:#fff;font-size:25px;font-weight:900;outline:none}
-.presets{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:10px 0 18px}
-.preset{border:1px solid rgba(255,255,255,.14);background:#111c34;color:#fff;border-radius:11px;padding:10px 4px;font-weight:900;cursor:pointer}
-.pay{width:100%;border:0;border-radius:15px;padding:17px;background:#0877ff;color:#fff;font-size:18px;font-weight:900;cursor:pointer}
-.pay:disabled,.walletBtn:disabled{opacity:.55;cursor:not-allowed}
-.note,.status{text-align:center;font-size:13px;color:#92a4c2;line-height:1.45}
-.status{min-height:18px;margin-top:10px;color:#a7d6ff}
-.sep{height:1px;background:rgba(255,255,255,.1);margin:20px 0}
-.address{font-family:monospace;font-size:12px;word-break:break-all;background:#050b16;padding:12px;border-radius:11px;color:#d0dbef}
-.copy{width:100%;margin-top:9px;border:1px solid rgba(255,255,255,.14);background:#111c34;color:#fff;border-radius:11px;padding:11px;font-weight:800;cursor:pointer}
-.modal{position:fixed;inset:0;background:rgba(0,0,0,.72);display:none;align-items:center;justify-content:center;padding:18px;z-index:50}
-.modal.show{display:flex}
-.sheet{width:min(440px,100%);background:#0b1428;border:1px solid rgba(255,255,255,.14);border-radius:24px;padding:22px;box-shadow:0 25px 80px rgba(0,0,0,.55)}
-.sheet h2{margin:0 0 8px;text-align:center;font-size:24px}
-.sheet p{margin:0 0 16px;text-align:center;color:#aebbd1;line-height:1.4}
-.walletBtn{display:block;width:100%;text-align:center;border:1px solid rgba(255,255,255,.14);background:#13203d;color:white;border-radius:14px;padding:14px;margin:9px 0;font-weight:900;cursor:pointer}
-.walletBtn.primary{background:#0877ff;border-color:#0877ff}
-.close{width:100%;border:0;background:transparent;color:#a9b7ce;padding:12px;cursor:pointer;font-weight:800}
+
+body{
+margin:0;
+min-height:100vh;
+display:grid;
+place-items:center;
+padding:22px;
+background:radial-gradient(circle at top,#18345f 0,#081225 45%,#03070e 100%);
+color:#fff;
+font-family:Arial,Helvetica,sans-serif
+}
+
+.card{
+width:min(500px,100%);
+background:rgba(7,16,31,.97);
+border:1px solid rgba(255,255,255,.1);
+border-radius:28px;
+padding:26px;
+box-shadow:0 24px 70px rgba(0,0,0,.45)
+}
+
+.logo{
+width:82px;
+height:82px;
+margin:0 auto 16px;
+border-radius:50%;
+display:grid;
+place-items:center;
+background:#0877ff;
+font-size:34px;
+font-weight:900;
+box-shadow:0 0 28px rgba(8,119,255,.4)
+}
+
+h1{
+text-align:center;
+margin:0;
+font-size:32px
+}
+
+.sub{
+text-align:center;
+color:#b8c5dc;
+line-height:1.45;
+margin:10px 0 24px
+}
+
+label{
+display:block;
+font-weight:800;
+margin:16px 0 8px
+}
+
+.tokens{
+display:grid;
+grid-template-columns:repeat(2,1fr);
+gap:9px
+}
+
+.token{
+border:1px solid rgba(255,255,255,.15);
+background:#111c34;
+color:#fff;
+border-radius:13px;
+padding:14px 6px;
+font-size:17px;
+font-weight:900;
+cursor:pointer
+}
+
+.token.active{
+outline:2px solid #2d94ff;
+background:#16294c
+}
+
+.details{
+margin-top:18px;
+padding:18px;
+border:1px solid rgba(255,255,255,.12);
+border-radius:18px;
+background:#0d1730
+}
+
+.row{
+display:flex;
+justify-content:space-between;
+gap:16px;
+margin:8px 0;
+color:#b8c5dc
+}
+
+.row strong{
+color:#fff
+}
+
+.warning{
+text-align:center;
+color:#ffd66b;
+font-weight:800;
+line-height:1.4;
+margin:17px 0
+}
+
+.qrwrap{
+background:#fff;
+border-radius:18px;
+padding:14px;
+width:max-content;
+max-width:100%;
+margin:16px auto
+}
+
+#qrcode img,
+#qrcode canvas{
+display:block;
+max-width:240px;
+width:100%!important;
+height:auto!important
+}
+
+.address{
+font-family:monospace;
+font-size:12px;
+word-break:break-all;
+background:#050b16;
+padding:12px;
+border-radius:11px;
+color:#d0dbef
+}
+
+.copy{
+width:100%;
+margin-top:10px;
+border:0;
+background:#0877ff;
+color:#fff;
+border-radius:13px;
+padding:14px;
+font-size:16px;
+font-weight:900;
+cursor:pointer
+}
+
+.status{
+text-align:center;
+min-height:20px;
+margin-top:10px;
+color:#a7d6ff;
+font-size:13px
+}
+
+.small{
+text-align:center;
+color:#92a4c2;
+font-size:13px;
+line-height:1.45;
+margin:14px 0 0
+}
 </style>
 </head>
 
 <body>
+
 <main class="card">
+
 <div class="logo">$1</div>
+
 <h1>$1 to a Million</h1>
 
-<p class="sub">Help me reach $1,000,000. Send any amount you want.</p>
+<p class="sub">
+Send any amount you want in USDT or USDC.
+</p>
 
 <label>Choose stablecoin</label>
 
@@ -53,335 +188,122 @@ input{width:100%;padding:16px 16px 16px 41px;border-radius:15px;border:1px solid
 <button class="token" data-token="USDC">USDC</button>
 </div>
 
-<label>Amount</label>
+<div class="details">
 
-<div class="amount">
-<span>$</span>
-<input id="amount" type="number" min="0.01" step="0.01" value="1" inputmode="decimal">
+<div class="row">
+<span>Coin</span>
+<strong id="coin">USDT</strong>
 </div>
 
-<div class="presets">
-<button class="preset" data-v="1">$1</button>
-<button class="preset" data-v="5">$5</button>
-<button class="preset" data-v="10">$10</button>
-<button class="preset" data-v="100">$100</button>
+<div class="row">
+<span>Network</span>
+<strong>Solana</strong>
 </div>
 
-<button class="pay" id="pay">Connect wallet and pay</button>
+<p class="warning">
+Send only <span id="warningCoin">USDT</span> using the Solana network.
+</p>
 
-<p class="note">Solana network. A wallet confirmation is always required.</p>
+<div class="qrwrap">
+<div id="qrcode"></div>
+</div>
+
+<div class="address">
+DfNh2TzQKjScai966UMtxQcUDV2F3NG6SxNKxnWkmMvm
+</div>
+
+<button class="copy" id="copy">
+Copy wallet address
+</button>
 
 <div class="status" id="status"></div>
 
-<div class="sep"></div>
+<p class="small">
+Open your crypto wallet, choose
+<span id="instructionCoin">USDT</span>
+on Solana, scan the code or paste the address, enter your amount, and send.
+</p>
 
-<div class="address">DfNh2TzQKjScai966UMtxQcUDV2F3NG6SxNKxnWkmMvm</div>
-
-<button class="copy" id="copy">Copy wallet address</button>
+</div>
 </main>
 
-<div class="modal" id="modal">
-<div class="sheet">
+<script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
 
-<h2>Choose your wallet</h2>
+<script>
+const recipient =
+"DfNh2TzQKjScai966UMtxQcUDV2F3NG6SxNKxnWkmMvm";
 
-<p id="summary"></p>
+const coin =
+document.getElementById("coin");
 
-<button class="walletBtn primary" id="phantomBtn">Phantom</button>
+const warningCoin =
+document.getElementById("warningCoin");
 
-<button class="walletBtn" id="solflareBtn">Solflare</button>
+const instructionCoin =
+document.getElementById("instructionCoin");
 
-<button class="close" id="close">Close</button>
+const status =
+document.getElementById("status");
 
-</div>
-</div>
-
-<script type="module">
-import {
-  Connection,
-  PublicKey,
-  Transaction
-} from "https://esm.sh/@solana/web3.js@1.98.4?bundle";
-
-import {
-  getAssociatedTokenAddress,
-  createAssociatedTokenAccountInstruction,
-  createTransferCheckedInstruction
-} from "https://esm.sh/@solana/spl-token@0.4.14?bundle&deps=@solana/web3.js@1.98.4";
-
-const recipient = new PublicKey(
-  "DfNh2TzQKjScai966UMtxQcUDV2F3NG6SxNKxnWkmMvm"
+new QRCode(
+document.getElementById("qrcode"),
+{
+text:recipient,
+width:240,
+height:240,
+correctLevel:QRCode.CorrectLevel.M
+}
 );
 
-const tokens = {
-  USDT: {
-    mint: new PublicKey(
-      "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB"
-    ),
-    decimals: 6
-  },
-  USDC: {
-    mint: new PublicKey(
-      "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
-    ),
-    decimals: 6
-  }
-};
+document
+.querySelectorAll(".token")
+.forEach(button => {
 
-const connection = new Connection(
-  "https://api.mainnet-beta.solana.com",
-  "confirmed"
+button.onclick = () => {
+
+document
+.querySelectorAll(".token")
+.forEach(item =>
+item.classList.remove("active")
 );
 
-let selected = "USDT";
-let busy = false;
+button.classList.add("active");
 
-const amount = document.getElementById("amount");
-const status = document.getElementById("status");
-const modal = document.getElementById("modal");
-const summary = document.getElementById("summary");
+coin.textContent =
+button.dataset.token;
 
-function cleanAmount(value) {
-  const text = String(value).trim();
+warningCoin.textContent =
+button.dataset.token;
 
-  if (!/^\d+(\.\d{1,6})?$/.test(text) || Number(text) <= 0) {
-    return null;
-  }
+instructionCoin.textContent =
+button.dataset.token;
 
-  return text;
-}
+status.textContent = "";
 
-function baseUnits(value, decimals) {
-  const [whole, fraction = ""] = value.split(".");
+};
 
-  return (
-    BigInt(whole) * 10n ** BigInt(decimals) +
-    BigInt((fraction + "0".repeat(decimals)).slice(0, decimals))
-  );
-}
-
-function providerFor(wallet) {
-  if (wallet === "phantom") {
-    return (
-      window.phantom?.solana ||
-      (window.solana?.isPhantom ? window.solana : null)
-    );
-  }
-
-  return window.solflare || null;
-}
-
-function walletPage(wallet) {
-  const page = encodeURIComponent(
-    location.href.split("?")[0] + "?wallet=" + wallet
-  );
-
-  const reference = encodeURIComponent(
-    location.origin + location.pathname
-  );
-
-  if (wallet === "phantom") {
-    return (
-      "https://phantom.app/ul/browse/" +
-      page +
-      "?ref=" +
-      reference
-    );
-  }
-
-  return (
-    "https://solflare.com/ul/v1/browse/" +
-    page +
-    "?ref=" +
-    reference
-  );
-}
-
-async function payWith(wallet) {
-  const value = cleanAmount(amount.value);
-
-  if (!value) {
-    status.textContent = "Enter a valid amount.";
-    modal.classList.remove("show");
-    return;
-  }
-
-  const provider = providerFor(wallet);
-
-  if (!provider) {
-    location.href = walletPage(wallet);
-    return;
-  }
-
-  if (busy) {
-    return;
-  }
-
-  busy = true;
-
-  document
-    .querySelectorAll(".walletBtn")
-    .forEach(button => button.disabled = true);
-
-  status.textContent = "Waiting for wallet confirmation...";
-
-  try {
-    const connected = await provider.connect();
-
-    const sender = new PublicKey(
-      connected.publicKey || provider.publicKey
-    );
-
-    const { mint, decimals } = tokens[selected];
-
-    const senderToken = await getAssociatedTokenAddress(
-      mint,
-      sender
-    );
-
-    const receiverToken = await getAssociatedTokenAddress(
-      mint,
-      recipient
-    );
-
-    const transaction = new Transaction();
-
-    const receiverAccount =
-      await connection.getAccountInfo(receiverToken);
-
-    if (!receiverAccount) {
-      transaction.add(
-        createAssociatedTokenAccountInstruction(
-          sender,
-          receiverToken,
-          recipient,
-          mint
-        )
-      );
-    }
-
-    transaction.add(
-      createTransferCheckedInstruction(
-        senderToken,
-        mint,
-        receiverToken,
-        sender,
-        baseUnits(value, decimals),
-        decimals
-      )
-    );
-
-    transaction.feePayer = sender;
-
-    transaction.recentBlockhash =
-      (await connection.getLatestBlockhash()).blockhash;
-
-    const result =
-      await provider.signAndSendTransaction(transaction);
-
-    const signature =
-      typeof result === "string"
-        ? result
-        : result.signature;
-
-    modal.classList.remove("show");
-
-    status.innerHTML =
-      'Payment sent. <a style="color:#70b7ff" target="_blank" rel="noopener" href="https://solscan.io/tx/' +
-      signature +
-      '">View transaction</a>';
-
-  } catch (error) {
-    status.textContent =
-      error?.message || "Payment was cancelled or failed.";
-
-    modal.classList.remove("show");
-
-  } finally {
-    busy = false;
-
-    document
-      .querySelectorAll(".walletBtn")
-      .forEach(button => button.disabled = false);
-  }
-}
+});
 
 document
-  .querySelectorAll(".token")
-  .forEach(button => {
-    button.onclick = () => {
-      document
-        .querySelectorAll(".token")
-        .forEach(item => item.classList.remove("active"));
+.getElementById("copy")
+.onclick = async () => {
 
-      button.classList.add("active");
-      selected = button.dataset.token;
-    };
-  });
+try {
 
-document
-  .querySelectorAll(".preset")
-  .forEach(button => {
-    button.onclick = () => {
-      amount.value = button.dataset.v;
-    };
-  });
+await navigator.clipboard.writeText(recipient);
 
-document.getElementById("pay").onclick = () => {
-  const value = cleanAmount(amount.value);
+status.textContent =
+"Wallet address copied.";
 
-  if (!value) {
-    status.textContent = "Enter a valid amount.";
-    return;
-  }
+} catch {
 
-  summary.textContent =
-    "$" + value + " " + selected + " on Solana";
+status.textContent =
+recipient;
 
-  modal.classList.add("show");
-};
-
-document.getElementById("phantomBtn").onclick = () => {
-  payWith("phantom");
-};
-
-document.getElementById("solflareBtn").onclick = () => {
-  payWith("solflare");
-};
-
-document.getElementById("close").onclick = () => {
-  modal.classList.remove("show");
-};
-
-modal.onclick = event => {
-  if (event.target === modal) {
-    modal.classList.remove("show");
-  }
-};
-
-document.getElementById("copy").onclick = async () => {
-  try {
-    await navigator.clipboard.writeText(
-      recipient.toString()
-    );
-
-    status.textContent = "Wallet address copied.";
-
-  } catch {
-    status.textContent = recipient.toString();
-  }
-};
-
-const requestedWallet =
-  new URLSearchParams(location.search).get("wallet");
-
-if (
-  requestedWallet === "phantom" ||
-  requestedWallet === "solflare"
-) {
-  status.textContent =
-    "Wallet detected. Choose amount and continue.";
 }
+
+};
 </script>
+
 </body>
 </html>
